@@ -17,11 +17,14 @@
 
 package codes.bytes.quaich.intellij
 
-import org.jetbrains.plugins.scala.lang.psi.api.toplevel.typedef.ScTypeDefinition
+import org.jetbrains.plugins.scala.lang.psi.api.toplevel.typedef.{ScClass, ScTypeDefinition}
 import org.jetbrains.plugins.scala.lang.psi.impl.toplevel.typedef.SyntheticMembersInjector
+import com.intellij.openapi.diagnostic.Logger
 
 
 class QuaichInjector extends SyntheticMembersInjector {
+  private val log = Logger.getInstance("org.jetbrains.plugins.scala.util.TestUtils")
+
   override def injectFunctions(source: ScTypeDefinition): Seq[String] =
     super.injectFunctions(source)
 
@@ -35,10 +38,14 @@ class QuaichInjector extends SyntheticMembersInjector {
 
 
   override def injectSupers(source: ScTypeDefinition): Seq[String] = {
-    //if (source.hasAnnotation("codes.bytes.quaich.api.http.macros.LambdaHTTPApi"))
-      Seq("codes.bytes.quaich.api.http.HTTPApp")
-    //else
- //  Seq.empty
+    log.debug(s"Inject supers on $source ; annotations: ${source.annotationNames.mkString(", ")}...")
+    source match {
+      case clazz: ScClass if clazz.annotationNames.contains("LambdaHTTPApi") =>
+        log.info("Found a LambdaHTTPApi annotated class. Returning the HTTPHandler trait as a super...")
+        Seq("codes.bytes.quaich.api.http.routing.HTTPHandler")
+      case _ =>
+        Seq.empty
+    }
   }
 
 }

@@ -25,16 +25,18 @@ lazy val intellijPlugin = (project in file(".")).
   settings(
     name := "quaich-intellij-plugin",
     libraryDependencies ++= Seq(
-      projectOrg %% "quaich-http" % projectVersion
     ),
+    assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
     ideaInternalPlugins := Seq(),
     ideaExternalPlugins := Seq(
       IdeaPlugin.Zip("scala-plugin", url("https://plugins.jetbrains.com/files/1347/28632/scala-intellij-bin-2016.3.2.zip"))
     ),
+    aggregate in updateIdea := false,
     assemblyExcludedJars in assembly <<= ideaFullJars,
     ideaBuild := "162.2032.8" // Intellij 2016.2.4
   ).
   enablePlugins(SbtIdeaPlugin)
+
 
 lazy val packagePlugin = TaskKey[File]("package-plugin", "Create plugin's zip file ready to load into IDEA")
 
