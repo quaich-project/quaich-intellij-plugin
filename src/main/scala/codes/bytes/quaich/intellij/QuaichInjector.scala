@@ -31,6 +31,14 @@ class QuaichInjector extends SyntheticMembersInjector {
       case clazz: ScClass if clazz.annotationNames.contains("LambdaHTTPApi") =>
         log.info(s"Found a LambdaHTTPApi annotated class ($clazz). Returning injected functions...")
         val b = Seq.newBuilder[String]
+        /**
+          * Although the annotation injector tells LambdaHTTPApi classes they are instances of
+          * HTTPHandler, the annotation macro also patches in a constructor that satisfies
+          * the abstract members request & context.
+          * Without these "fake" method defs, IntelliJ will warn you after the
+          * annotation injection that you need to make your class abstract or implement.
+          * Injecting fake null defs will make Intellij STFU.
+          */
         b += "override def request: LambdaHTTPRequest = null" // fake it into thinking we filled the value
         b += "override def context: LambdaContext = null" // fake it into thinking we filled the value
         b.result
