@@ -23,10 +23,21 @@ import com.intellij.openapi.diagnostic.Logger
 
 
 class QuaichInjector extends SyntheticMembersInjector {
-  private val log = Logger.getInstance("org.jetbrains.plugins.scala.util.TestUtils")
+  private val log = Logger.getInstance("codes.bytes.quaich.intellij.QuaichInjector")
 
-  override def injectFunctions(source: ScTypeDefinition): Seq[String] =
-    super.injectFunctions(source)
+  override def injectFunctions(source: ScTypeDefinition): Seq[String] = {
+    log.debug(s"Inject functions on $source ; annotations: ${source.annotationNames.mkString(", ")}...")
+    source match {
+      case clazz: ScClass if clazz.annotationNames.contains("LambdaHTTPApi") =>
+        log.info(s"Found a LambdaHTTPApi annotated class ($clazz). Returning injected functions...")
+        val b = Seq.newBuilder[String]
+        b += "override def request: LambdaHTTPRequest = null" // fake it into thinking we filled the value
+        b += "override def context: LambdaContext = null" // fake it into thinking we filled the value
+        b.result
+      case _ =>
+        Seq.empty
+    }
+  }
 
 
   override def injectInners(source: ScTypeDefinition): Seq[String] =
