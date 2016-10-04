@@ -29,7 +29,7 @@ class QuaichInjector extends SyntheticMembersInjector {
     log.debug(s"Inject functions on $source ; annotations: ${source.annotationNames.mkString(", ")}...")
     source match {
       case clazz: ScClass if clazz.annotationNames.contains("LambdaHTTPApi") =>
-        log.info(s"Found a LambdaHTTPApi annotated class ($clazz). Returning injected functions...")
+        log.info(s"[*] Found a LambdaHTTPApi annotated class ($clazz). Returning injected functions...")
         val b = Seq.newBuilder[String]
         /**
           * Although the annotation injector tells LambdaHTTPApi classes they are instances of
@@ -39,8 +39,8 @@ class QuaichInjector extends SyntheticMembersInjector {
           * annotation injection that you need to make your class abstract or implement.
           * Injecting fake null defs will make Intellij STFU.
           */
-        b += "override def request: LambdaHTTPRequest = null" // fake it into thinking we filled the value
-        b += "override def context: LambdaContext = null" // fake it into thinking we filled the value
+        b += "override def request: LambdaHTTPRequest = ???" // fake it into thinking we filled the value
+        b += "override def context: LambdaContext = ???" // fake it into thinking we filled the value
         b.result
       case _ =>
         Seq.empty
