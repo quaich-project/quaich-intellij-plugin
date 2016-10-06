@@ -19,7 +19,7 @@
     </project-components>
 
     <extensions defaultExtensionNs="org.intellij.scala">
-        <syntheticMemberInjector implementation="codes.bytes.quaich.intellij.QuaichInjector"/>
+        <syntheticMemberInjector implementation="codes.bytes.quaich.intellij.QuaichHTTPInjector"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

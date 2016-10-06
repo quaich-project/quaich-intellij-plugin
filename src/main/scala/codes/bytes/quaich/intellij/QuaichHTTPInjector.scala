@@ -22,8 +22,8 @@ import org.jetbrains.plugins.scala.lang.psi.impl.toplevel.typedef.SyntheticMembe
 import com.intellij.openapi.diagnostic.Logger
 
 
-class QuaichInjector extends SyntheticMembersInjector {
-  private val log = Logger.getInstance("codes.bytes.quaich.intellij.QuaichInjector")
+class QuaichHTTPInjector extends SyntheticMembersInjector {
+  private val log = Logger.getInstance("codes.bytes.quaich.intellij.QuaichHTTPInjector")
 
   override def injectFunctions(source: ScTypeDefinition): Seq[String] = {
     log.debug(s"Inject functions on $source ; annotations: ${source.annotationNames.mkString(", ")}...")
@@ -39,8 +39,9 @@ class QuaichInjector extends SyntheticMembersInjector {
           * annotation injection that you need to make your class abstract or implement.
           * Injecting fake null defs will make Intellij STFU.
           */
-        b += "override def request: LambdaHTTPRequest = ???" // fake it into thinking we filled the value
-        b += "override def context: LambdaContext = ???" // fake it into thinking we filled the value
+        b += "override def request: LambdaHTTPRequest = ???"
+        b += "override def context: LambdaContext = ???"
+        b += "def routeRequest(): LambdaHTTPResponse = ???"
         b.result
       case _ =>
         Seq.empty
