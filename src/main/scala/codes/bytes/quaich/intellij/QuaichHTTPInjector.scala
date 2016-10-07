@@ -43,6 +43,7 @@ class QuaichHTTPInjector extends SyntheticMembersInjector {
         b += "override def context: LambdaContext = ???"
         b += "def routeRequest(): LambdaHTTPResponse = ???"
         b += "def routes: Map[(HTTPMethod, String), HTTPRoute[_]] = ???"
+        b += "def complete(magnet: HTTPResponseMagnet): magnet.Result = ???"
         b.result
       case _ =>
         Seq.empty
